@@ -1,6 +1,6 @@
 #!/usr/bin/perl5
 
-# use strict;
+use strict;
 use warnings;
 use Data::Dumper;
 
@@ -12,9 +12,22 @@ $Parser->field_map(qw/name serve_accuracy serve_spin return_skill return_accurac
 my @Data = $Parser->read_file("data.csv");
 shift @Data;
 
-#list of games
 my @Games = ([0,1],[0,2],[1,2]);
+my @Players = ([$Data[0]{name},0,0],[$Data[1]{name},0,0], [$Data[2]{name},0,0]);
+my $lastserved = '';
+my $lastlastserved = '';
 
+sub intro {
+  print "\033[2J";   #clear the screen
+  print "\033[0;0H"; #jump to 0,0
+  print "Hello Boys and Girls, Today we'll have the Annual Armour Payments TT tournament\n \tThe Players: \n";
+  foreach my $p (0..$#Data){
+    print ("\t $Data[$p]{name}, $Data[$p]{notes}\n");
+  }
+  print "\nLet's Get it on! \n";
+  <STDIN>;
+  &pick_match;
+}
 
 #call game
 sub pick_match {
@@ -25,7 +38,11 @@ sub pick_match {
     @game_on = @{shift @Games};
     start_game($game_on[0],$game_on[1]);
   } else {
-    print "all games done";
+    print ("Final Scores:\n");
+    for my $j (0..$#Players){
+      print ("  $Players[$j][0], $Players[$j][1] - $Players[$j][2]\n");
+      }
+    print "Tournament Done!\n See you again next year!\n\n";
   }
 }
 
@@ -62,8 +79,7 @@ sub start_game {
 
 }
 
-my $lastserved = '';
-my $lastlastserved = '';
+
 
 #server serves
 sub serve {
@@ -211,28 +227,27 @@ sub update_score {
   }
 }
 
-my @players = ([$Data[0]{name},0,0],[$Data[1]{name},0,0], [$Data[2]{name},0,0]);
+
 
 sub summary {
   my $w = shift;
   my $l = shift;
 
-  for my $i (0..$#players){
+  for my $i (0..$#Players){
 
-      if ($players[$i][0] eq $w){
-        $players[$i][1] += 1;
+      if ($Players[$i][0] eq $w){
+        $Players[$i][1] += 1;
       }
 
-      if ($players[$i][0] eq $l){
-        $players[$i][2] += 1;
+      if ($Players[$i][0] eq $l){
+        $Players[$i][2] += 1;
       }
   }
-  print ("score recap:\n");
-  for my $j (0..$#players){
-    print ("$players[$j][0], $players[$j][1] - $players[$j][2]\n");
+  print ("Scores Recap:\n");
+  for my $j (0..$#Players){
+    print ("  $Players[$j][0], $Players[$j][1] - $Players[$j][2]\n");
     }
   return;
 }
 
-#run
-pick_match;
+intro;
