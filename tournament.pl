@@ -20,7 +20,7 @@ my $lastlastserved = '';
 sub intro {
   print "\033[2J";   #clear the screen
   print "\033[0;0H"; #jump to 0,0
-  print "Hello Boys and Girls, Today we'll have the Annual Armour Payments TT tournament\n \tThe Players: \n";
+  print "Hello Boys and Girls, Today we'll have the Annual XYZ Company TT tournament\n \tThe Players: \n";
   foreach my $p (0..$#Data){
     print ("\t $Data[$p]{name}, $Data[$p]{notes}\n");
   }
@@ -193,7 +193,7 @@ sub return_back2 {
   my $return = (rand (100) le (($pl{return_skill} - $op{return_spin}) * $pl{return_accuracy})) ? 'true' : 'false';
   if ($return eq 'true'){
     print "...in-bounds\n";
-    &return_forth(\%op, \%pl);
+    return_forth(\%op, \%pl);
     } else {
     print "...out of bounds\n";
     &update_score (\%pl,\%op);
@@ -223,11 +223,9 @@ sub update_score {
     <STDIN>;
     $lastserved = '';
     $lastlastserved = '';
-    &pick_match;
+    pick_match;
   }
 }
-
-
 
 sub summary {
   my $w = shift;
